@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>龙某的小本本</title><link>https://longxiucai.github.io</link><description> </description><copyright>龙某的小本本</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/43312586</url><title>avatar</title><link>https://longxiucai.github.io</link></image><lastBuildDate>Mon, 20 Jul 2026 11:57:49 +0000</lastBuildDate><managingEditor>龙某的小本本</managingEditor><ttl>60</ttl><webMaster>龙某的小本本</webMaster><item><title>临时dns服务搭建</title><link>https://longxiucai.github.io/post/93.html</link><description>通过coredns镜像，nerdctl run启动dns服务器，监听53端口，
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>龙某的小本本</title><link>https://longxiucai.github.io</link><description> </description><copyright>龙某的小本本</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/43312586</url><title>avatar</title><link>https://longxiucai.github.io</link></image><lastBuildDate>Mon, 20 Jul 2026 12:06:12 +0000</lastBuildDate><managingEditor>龙某的小本本</managingEditor><ttl>60</ttl><webMaster>龙某的小本本</webMaster><item><title>临时dns服务搭建</title><link>https://longxiucai.github.io/post/93.html</link><description>通过coredns镜像，nerdctl run启动dns服务器，监听53端口，
 启动dns：`bash run-tmp-dns.sh -d lyx.nginx.com=10.44.70.210,2003:db8::11 -d test.com=1.1.1.1`
 卸载：`bash run-tmp-dns.sh -u `
 ```
@@ -2140,16 +2140,15 @@ echo '已完成处理，结果保存到 $output_file'
 。</description><guid isPermaLink="true">https://longxiucai.github.io/post/54.html</guid><pubDate>Thu, 16 Jan 2025 02:17:33 +0000</pubDate></item><item><title>kubernetes dnsPolicy</title><link>https://longxiucai.github.io/post/53.html</link><description># dnsPolicy的4种用法&#13;
 策略名称 | 说明 | 特点 | 适用场景&#13;
 -- | -- | -- | --&#13;
-ClusterFirst | 默认策略，优先通过集群的 DNS 解析 Kubernetes 服务域名，无法解析时退回到宿主机的 DNS 设置。</description><guid isPermaLink="true">https://longxiucai.github.io/post/53.html</guid><pubDate>Wed, 08 Jan 2025 06:37:27 +0000</pubDate></item><item><title>运维常用命令/脚本</title><link>https://longxiucai.github.io/post/52.html</link><description>1. 获取kubernetes cluster master节点ip地址
+ClusterFirst | 默认策略，优先通过集群的 DNS 解析 Kubernetes 服务域名，无法解析时退回到宿主机的 DNS 设置。</description><guid isPermaLink="true">https://longxiucai.github.io/post/53.html</guid><pubDate>Wed, 08 Jan 2025 06:37:27 +0000</pubDate></item><item><title>运维常用命令/脚本</title><link>https://longxiucai.github.io/post/52.html</link><description>### 获取kubernetes cluster master节点ip地址
 ```
 kubectl get nodes --selector=node-role.kubernetes.io/control-plane='' -o=jsonpath='{.items[*].status.addresses[?(@.type=='InternalIP')].address}'
-
 ```
-2.  获取kubernetes cluster node节点ip地址
+### 获取kubernetes cluster node节点ip地址
 ```
 kubectl get nodes --selector=node-role.kubernetes.io/node='' -o=jsonpath='{.items[*].status.addresses[?(@.type=='InternalIP')].address}'
 ```
-3. 通过`ping`获取丢包率与平均延迟
+### 通过`ping`获取丢包率与平均延迟
 ```shell
 # 执行ping命令并获取统计信息
 ping_result=$(ping -c 5 '$target' | tail -2)
@@ -2157,19 +2156,19 @@ ping_result=$(ping -c 5 '$target' | tail -2)
 packet_loss=$(echo '$ping_result' | grep -oP '\d+(?=% packet loss)')
 avg_latency=$(echo '$ping_result' | grep -oP '(?&lt;=rtt min/avg/max/mdev = )[\d.]+/[\d.]+/[\d.]+/[\d.]+' | awk -F '/' '{print $2}')
 ```
-4. cpu使用率
+### cpu使用率
 ```
 top -bn1 | grep 'Cpu(s)' | sed 's/.*, *\([0-9.]*\)%* id.*/\1/' | awk '{print 100 - $1}'
 ```
-5. 内存使用率
+### 内存使用率
 ```
 free | awk 'FNR==2{printf '%.2f', $3/$2*100}'
 ```
-6. 随机选择一个ip地址
+### 随机选择一个ip地址
 ```
 echo $IPs | tr ' ' '\n' | shuf -n 1
 ```
-7. 文件数量限制，清除多余文件
+### 文件数量限制，清除多余文件
 ```
 cleanup_old_files() {
   local DIR='$1'
@@ -2204,7 +2203,7 @@ cleanup_old_files /opt/test 5
 ```
 ssh -q -o StrictHostKeyChecking=no 'root@10.20.30.40' '$(typeset -f cleanup_old_files); cleanup_old_files /opt/test 5'
 ```
-8. `dd`测试写速率
+### `dd`测试写速率
 ```
 # dd输出如下
 [root@abcdefg01 ~]# dd if=/dev/zero of=.tmp.test bs=1M count=100
@@ -2216,7 +2215,7 @@ dd if=/dev/zero of=.tmp.test bs=1M count=100 2&gt;&amp;1 | awk 'NR==3{print $0}'
 # 不要单位
 dd if=/dev/zero of=.tmp.test bs=1M count=100 2&gt;&amp;1 | awk 'NR==3{print $0}' | grep -oP '\d+(\.\d+)?(?=\s+[A-Za-z]+/s)'
 ```
-9. alertmanager告警接口，产生告警
+### alertmanager告警接口，产生告警
 ```
 curl -X POST http://172.20.41.32:30300/api/v2/alerts \
   -H 'Content-Type: application/json' \
@@ -2249,7 +2248,7 @@ curl -X POST http://172.20.41.32:30300/api/v2/alerts \
   ]'
 
 ```
-10. 集群中全部容器运行date命令检查时区（date命令不存在的情况下报错）
+### 集群中全部容器运行date命令检查时区（date命令不存在的情况下报错）
 ```
 kubectl get pods -A -o 'jsonpath={range .items[*]}{.metadata.namespace}{'\t'}{.metadata.name}{'\t'}{range .spec.containers[*]}{.name}{'\t'}{end}{'\n'}{end}' | while IFS=$'\t' read -r namespace pod containers; do
     for container in $containers; do
@@ -2262,11 +2261,11 @@ kubectl get pods -A -o 'jsonpath={range .items[*]}{.metadata.namespace}{'\t'}{.m
     done
 done
 ```
-11. 去除重复行
+### 去除重复行
 ```
 awk '!a[$0]++' /path/to/file
 ```
-12. 拉取外网镜像上传到内网harbor，通过代理拉镜像，通过docker manifest做multi（可以通过skopeo自动实现）。</description><guid isPermaLink="true">https://longxiucai.github.io/post/52.html</guid><pubDate>Tue, 10 Dec 2024 07:49:40 +0000</pubDate></item><item><title>calico network policy只开通pod间tcp流量</title><link>https://longxiucai.github.io/post/51.html</link><description># 资源文件&#13;
+### 拉取外网镜像上传到内网harbor，通过代理拉镜像，通过docker manifest做multi（可以通过skopeo自动实现）。</description><guid isPermaLink="true">https://longxiucai.github.io/post/52.html</guid><pubDate>Tue, 10 Dec 2024 07:49:40 +0000</pubDate></item><item><title>calico network policy只开通pod间tcp流量</title><link>https://longxiucai.github.io/post/51.html</link><description># 资源文件&#13;
 ```&#13;
 apiVersion: v1&#13;
 kind: Pod&#13;

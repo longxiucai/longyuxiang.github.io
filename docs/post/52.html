@@ -10,16 +10,15 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="1. 获取kubernetes cluster master节点ip地址
+<meta name="description" content="### 获取kubernetes cluster master节点ip地址
 ```
 kubectl get nodes --selector=node-role.kubernetes.io/control-plane='' -o=jsonpath='{.items[*].status.addresses[?(@.type=='InternalIP')].address}'
-
 ```
-2.  获取kubernetes cluster node节点ip地址
+### 获取kubernetes cluster node节点ip地址
 ```
 kubectl get nodes --selector=node-role.kubernetes.io/node='' -o=jsonpath='{.items[*].status.addresses[?(@.type=='InternalIP')].address}'
 ```
-3. 通过`ping`获取丢包率与平均延迟
+### 通过`ping`获取丢包率与平均延迟
 ```shell
 # 执行ping命令并获取统计信息
 ping_result=$(ping -c 5 '$target' | tail -2)
@@ -27,19 +26,19 @@ ping_result=$(ping -c 5 '$target' | tail -2)
 packet_loss=$(echo '$ping_result' | grep -oP '\d+(?=% packet loss)')
 avg_latency=$(echo '$ping_result' | grep -oP '(?<=rtt min/avg/max/mdev = )[\d.]+/[\d.]+/[\d.]+/[\d.]+' | awk -F '/' '{print $2}')
 ```
-4. cpu使用率
+### cpu使用率
 ```
 top -bn1 | grep 'Cpu(s)' | sed 's/.*, *\([0-9.]*\)%* id.*/\1/' | awk '{print 100 - $1}'
 ```
-5. 内存使用率
+### 内存使用率
 ```
 free | awk 'FNR==2{printf '%.2f', $3/$2*100}'
 ```
-6. 随机选择一个ip地址
+### 随机选择一个ip地址
 ```
 echo $IPs | tr ' ' '\n' | shuf -n 1
 ```
-7. 文件数量限制，清除多余文件
+### 文件数量限制，清除多余文件
 ```
 cleanup_old_files() {
   local DIR='$1'
@@ -74,7 +73,7 @@ cleanup_old_files /opt/test 5
 ```
 ssh -q -o StrictHostKeyChecking=no 'root@10.20.30.40' '$(typeset -f cleanup_old_files); cleanup_old_files /opt/test 5'
 ```
-8. `dd`测试写速率
+### `dd`测试写速率
 ```
 # dd输出如下
 [root@abcdefg01 ~]# dd if=/dev/zero of=.tmp.test bs=1M count=100
@@ -86,7 +85,7 @@ dd if=/dev/zero of=.tmp.test bs=1M count=100 2>&1 | awk 'NR==3{print $0}' | grep
 # 不要单位
 dd if=/dev/zero of=.tmp.test bs=1M count=100 2>&1 | awk 'NR==3{print $0}' | grep -oP '\d+(\.\d+)?(?=\s+[A-Za-z]+/s)'
 ```
-9. alertmanager告警接口，产生告警
+### alertmanager告警接口，产生告警
 ```
 curl -X POST http://172.20.41.32:30300/api/v2/alerts \
   -H 'Content-Type: application/json' \
@@ -119,7 +118,7 @@ curl -X POST http://172.20.41.32:30300/api/v2/alerts \
   ]'
 
 ```
-10. 集群中全部容器运行date命令检查时区（date命令不存在的情况下报错）
+### 集群中全部容器运行date命令检查时区（date命令不存在的情况下报错）
 ```
 kubectl get pods -A -o 'jsonpath={range .items[*]}{.metadata.namespace}{'\t'}{.metadata.name}{'\t'}{range .spec.containers[*]}{.name}{'\t'}{end}{'\n'}{end}' | while IFS=$'\t' read -r namespace pod containers; do
     for container in $containers; do
@@ -132,22 +131,21 @@ kubectl get pods -A -o 'jsonpath={range .items[*]}{.metadata.namespace}{'\t'}{.m
     done
 done
 ```
-11. 去除重复行
+### 去除重复行
 ```
 awk '!a[$0]++' /path/to/file
 ```
-12. 拉取外网镜像上传到内网harbor，通过代理拉镜像，通过docker manifest做multi（可以通过skopeo自动实现）。">
+### 拉取外网镜像上传到内网harbor，通过代理拉镜像，通过docker manifest做multi（可以通过skopeo自动实现）。">
 <meta property="og:title" content="运维常用命令/脚本">
-<meta property="og:description" content="1. 获取kubernetes cluster master节点ip地址
+<meta property="og:description" content="### 获取kubernetes cluster master节点ip地址
 ```
 kubectl get nodes --selector=node-role.kubernetes.io/control-plane='' -o=jsonpath='{.items[*].status.addresses[?(@.type=='InternalIP')].address}'
-
 ```
-2.  获取kubernetes cluster node节点ip地址
+### 获取kubernetes cluster node节点ip地址
 ```
 kubectl get nodes --selector=node-role.kubernetes.io/node='' -o=jsonpath='{.items[*].status.addresses[?(@.type=='InternalIP')].address}'
 ```
-3. 通过`ping`获取丢包率与平均延迟
+### 通过`ping`获取丢包率与平均延迟
 ```shell
 # 执行ping命令并获取统计信息
 ping_result=$(ping -c 5 '$target' | tail -2)
@@ -155,19 +153,19 @@ ping_result=$(ping -c 5 '$target' | tail -2)
 packet_loss=$(echo '$ping_result' | grep -oP '\d+(?=% packet loss)')
 avg_latency=$(echo '$ping_result' | grep -oP '(?<=rtt min/avg/max/mdev = )[\d.]+/[\d.]+/[\d.]+/[\d.]+' | awk -F '/' '{print $2}')
 ```
-4. cpu使用率
+### cpu使用率
 ```
 top -bn1 | grep 'Cpu(s)' | sed 's/.*, *\([0-9.]*\)%* id.*/\1/' | awk '{print 100 - $1}'
 ```
-5. 内存使用率
+### 内存使用率
 ```
 free | awk 'FNR==2{printf '%.2f', $3/$2*100}'
 ```
-6. 随机选择一个ip地址
+### 随机选择一个ip地址
 ```
 echo $IPs | tr ' ' '\n' | shuf -n 1
 ```
-7. 文件数量限制，清除多余文件
+### 文件数量限制，清除多余文件
 ```
 cleanup_old_files() {
   local DIR='$1'
@@ -202,7 +200,7 @@ cleanup_old_files /opt/test 5
 ```
 ssh -q -o StrictHostKeyChecking=no 'root@10.20.30.40' '$(typeset -f cleanup_old_files); cleanup_old_files /opt/test 5'
 ```
-8. `dd`测试写速率
+### `dd`测试写速率
 ```
 # dd输出如下
 [root@abcdefg01 ~]# dd if=/dev/zero of=.tmp.test bs=1M count=100
@@ -214,7 +212,7 @@ dd if=/dev/zero of=.tmp.test bs=1M count=100 2>&1 | awk 'NR==3{print $0}' | grep
 # 不要单位
 dd if=/dev/zero of=.tmp.test bs=1M count=100 2>&1 | awk 'NR==3{print $0}' | grep -oP '\d+(\.\d+)?(?=\s+[A-Za-z]+/s)'
 ```
-9. alertmanager告警接口，产生告警
+### alertmanager告警接口，产生告警
 ```
 curl -X POST http://172.20.41.32:30300/api/v2/alerts \
   -H 'Content-Type: application/json' \
@@ -247,7 +245,7 @@ curl -X POST http://172.20.41.32:30300/api/v2/alerts \
   ]'
 
 ```
-10. 集群中全部容器运行date命令检查时区（date命令不存在的情况下报错）
+### 集群中全部容器运行date命令检查时区（date命令不存在的情况下报错）
 ```
 kubectl get pods -A -o 'jsonpath={range .items[*]}{.metadata.namespace}{'\t'}{.metadata.name}{'\t'}{range .spec.containers[*]}{.name}{'\t'}{end}{'\n'}{end}' | while IFS=$'\t' read -r namespace pod containers; do
     for container in $containers; do
@@ -260,11 +258,11 @@ kubectl get pods -A -o 'jsonpath={range .items[*]}{.metadata.namespace}{'\t'}{.m
     done
 done
 ```
-11. 去除重复行
+### 去除重复行
 ```
 awk '!a[$0]++' /path/to/file
 ```
-12. 拉取外网镜像上传到内网harbor，通过代理拉镜像，通过docker manifest做multi（可以通过skopeo自动实现）。">
+### 拉取外网镜像上传到内网harbor，通过代理拉镜像，通过docker manifest做multi（可以通过skopeo自动实现）。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://longxiucai.github.io/post/52.html">
 <meta property="og:image" content="https://avatars.githubusercontent.com/u/43312586">
@@ -329,43 +327,28 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><ol>
-<li>获取kubernetes cluster master节点ip地址</li>
-</ol>
+<div class="markdown-body" id="postBody"><h3>获取kubernetes cluster master节点ip地址</h3>
 <pre class="notranslate"><code class="notranslate">kubectl get nodes --selector=node-role.kubernetes.io/control-plane="" -o=jsonpath='{.items[*].status.addresses[?(@.type=="InternalIP")].address}'
-
 </code></pre>
-<ol start="2">
-<li>获取kubernetes cluster node节点ip地址</li>
-</ol>
+<h3>获取kubernetes cluster node节点ip地址</h3>
 <pre class="notranslate"><code class="notranslate">kubectl get nodes --selector=node-role.kubernetes.io/node="" -o=jsonpath='{.items[*].status.addresses[?(@.type=="InternalIP")].address}'
 </code></pre>
-<ol start="3">
-<li>通过<code class="notranslate">ping</code>获取丢包率与平均延迟</li>
-</ol>
+<h3>通过<code class="notranslate">ping</code>获取丢包率与平均延迟</h3>
 <div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 执行ping命令并获取统计信息</span>
 ping_result=<span class="pl-s"><span class="pl-pds">$(</span>ping -c 5 <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$target</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> tail -2<span class="pl-pds">)</span></span>
 <span class="pl-c"><span class="pl-c">#</span> 提取丢包率和平均延迟</span>
 packet_loss=<span class="pl-s"><span class="pl-pds">$(</span>echo <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$ping_result</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> grep -oP <span class="pl-s"><span class="pl-pds">'</span>\d+(?=% packet loss)<span class="pl-pds">'</span></span><span class="pl-pds">)</span></span>
 avg_latency=<span class="pl-s"><span class="pl-pds">$(</span>echo <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$ping_result</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> grep -oP <span class="pl-s"><span class="pl-pds">'</span>(?&lt;=rtt min/avg/max/mdev = )[\d.]+/[\d.]+/[\d.]+/[\d.]+<span class="pl-pds">'</span></span> <span class="pl-k">|</span> awk -F <span class="pl-s"><span class="pl-pds">'</span>/<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>{print $2}<span class="pl-pds">'</span></span><span class="pl-pds">)</span></span></pre></div>
-<ol start="4">
-<li>cpu使用率</li>
-</ol>
+<h3>cpu使用率</h3>
 <pre class="notranslate"><code class="notranslate">top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}'
 </code></pre>
-<ol start="5">
-<li>内存使用率</li>
-</ol>
+<h3>内存使用率</h3>
 <pre class="notranslate"><code class="notranslate">free | awk 'FNR==2{printf "%.2f", $3/$2*100}'
 </code></pre>
-<ol start="6">
-<li>随机选择一个ip地址</li>
-</ol>
+<h3>随机选择一个ip地址</h3>
 <pre class="notranslate"><code class="notranslate">echo $IPs | tr ' ' '\n' | shuf -n 1
 </code></pre>
-<ol start="7">
-<li>文件数量限制，清除多余文件</li>
-</ol>
+<h3>文件数量限制，清除多余文件</h3>
 <pre class="notranslate"><code class="notranslate">cleanup_old_files() {
   local DIR="$1"
   local MAX_FILES="$2"
@@ -398,9 +381,7 @@ cleanup_old_files /opt/test 5
 <p>例如需要通过ssh远端调用此函数</p>
 <pre class="notranslate"><code class="notranslate">ssh -q -o StrictHostKeyChecking=no "root@10.20.30.40" "$(typeset -f cleanup_old_files); cleanup_old_files /opt/test 5"
 </code></pre>
-<ol start="8">
-<li><code class="notranslate">dd</code>测试写速率</li>
-</ol>
+<h3><code class="notranslate">dd</code>测试写速率</h3>
 <pre class="notranslate"><code class="notranslate"># dd输出如下
 [root@abcdefg01 ~]# dd if=/dev/zero of=.tmp.test bs=1M count=100
 记录了100+0 的读入
@@ -411,9 +392,7 @@ dd if=/dev/zero of=.tmp.test bs=1M count=100 2&gt;&amp;1 | awk 'NR==3{print $0}'
 # 不要单位
 dd if=/dev/zero of=.tmp.test bs=1M count=100 2&gt;&amp;1 | awk 'NR==3{print $0}' | grep -oP '\d+(\.\d+)?(?=\s+[A-Za-z]+/s)'
 </code></pre>
-<ol start="9">
-<li>alertmanager告警接口，产生告警</li>
-</ol>
+<h3>alertmanager告警接口，产生告警</h3>
 <pre class="notranslate"><code class="notranslate">curl -X POST http://172.20.41.32:30300/api/v2/alerts \
   -H "Content-Type: application/json" \
   -d '[
@@ -445,9 +424,7 @@ dd if=/dev/zero of=.tmp.test bs=1M count=100 2&gt;&amp;1 | awk 'NR==3{print $0}'
   ]'
 
 </code></pre>
-<ol start="10">
-<li>集群中全部容器运行date命令检查时区（date命令不存在的情况下报错）</li>
-</ol>
+<h3>集群中全部容器运行date命令检查时区（date命令不存在的情况下报错）</h3>
 <pre class="notranslate"><code class="notranslate">kubectl get pods -A -o 'jsonpath={range .items[*]}{.metadata.namespace}{"\t"}{.metadata.name}{"\t"}{range .spec.containers[*]}{.name}{"\t"}{end}{"\n"}{end}' | while IFS=$'\t' read -r namespace pod containers; do
     for container in $containers; do
         if [[ -z "$container" ]]; then
@@ -459,14 +436,10 @@ dd if=/dev/zero of=.tmp.test bs=1M count=100 2&gt;&amp;1 | awk 'NR==3{print $0}'
     done
 done
 </code></pre>
-<ol start="11">
-<li>去除重复行</li>
-</ol>
+<h3>去除重复行</h3>
 <pre class="notranslate"><code class="notranslate">awk '!a[$0]++' /path/to/file
 </code></pre>
-<ol start="12">
-<li>拉取外网镜像上传到内网harbor，通过代理拉镜像，通过docker manifest做multi（可以通过skopeo自动实现）。</li>
-</ol>
+<h3>拉取外网镜像上传到内网harbor，通过代理拉镜像，通过docker manifest做multi（可以通过skopeo自动实现）。</h3>
 <pre class="notranslate"><code class="notranslate">image=registry.k8s.io/kube-proxy:v1.29.10
 set -e
 local_repo=harbor.myharbor.com
@@ -495,9 +468,7 @@ docker manifest create $local_repo/$image --amend $arm_image --amend $amd_image
 docker manifest push $local_repo/$image
 docker manifest rm $local_repo/$image
 </code></pre>
-<ol start="13">
-<li>通过命令查看各pod的limit情况</li>
-</ol>
+<h3>通过命令查看各pod的limit情况</h3>
 <pre class="notranslate"><code class="notranslate">kubectl get pods -A -o custom-columns=NAMESPACE:.metadata.namespace,POD:.metadata.name,CONTAINERS:.spec.containers[*].name,CPU_LIMIT:.spec.containers[*].resources.limits.cpu,MEM_LIMIT:.spec.containers[*].resources.limits.memory
 </code></pre></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
