@@ -261,7 +261,9 @@ data:
             # 5. 客户端真实IP查询
             location = /clientip {
                 default_type text/plain;
-                return 200 "$remote_addr\n";
+                # return 200 "$remote_addr\n";
+                return 200 "remote_addr:          $remote_addr\nrealip_remote_addr:   $realip_remote_addr\nproxy_protocol_addr:  $proxy_protocol_addr\nhttp_x_real_ip:       $http_x_real_ip\nhttp_x_forwarded_for: $http_x_forwarded_for\nremote_port:          $remote_port\nserver_addr:          $server_addr\nserver_port:          $server_port\n";
+
             }
 
             # 6. 完整请求头查询
@@ -330,7 +332,7 @@ spec:
     rollingUpdate:
       maxSurge: 0
       maxUnavailable: 1
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: nginx-demo
@@ -420,5 +422,22 @@ spec:
   ports:
   - port: 80
     targetPort: 80
-    nodePort: 30080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test
+spec:
+  ingressClassName: ingress-nginx
+  rules:
+  - host: test.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-nodeport-svc
+            port:
+              number: 80
 ```

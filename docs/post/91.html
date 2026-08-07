@@ -484,7 +484,9 @@ NAMESPACE: default
 <span class="pl-s">            # 5. 客户端真实IP查询</span>
 <span class="pl-s">            location = /clientip {</span>
 <span class="pl-s">                default_type text/plain;</span>
-<span class="pl-s">                return 200 "$remote_addr\n";</span>
+<span class="pl-s">                # return 200 "$remote_addr\n";</span>
+<span class="pl-s">                return 200 "remote_addr:          $remote_addr\nrealip_remote_addr:   $realip_remote_addr\nproxy_protocol_addr:  $proxy_protocol_addr\nhttp_x_real_ip:       $http_x_real_ip\nhttp_x_forwarded_for: $http_x_forwarded_for\nremote_port:          $remote_port\nserver_addr:          $server_addr\nserver_port:          $server_port\n";</span>
+<span class="pl-s"></span>
 <span class="pl-s">            }</span>
 <span class="pl-s"></span>
 <span class="pl-s">            # 6. 完整请求头查询</span>
@@ -553,7 +555,7 @@ NAMESPACE: default
     <span class="pl-ent">rollingUpdate</span>:
       <span class="pl-ent">maxSurge</span>: <span class="pl-c1">0</span>
       <span class="pl-ent">maxUnavailable</span>: <span class="pl-c1">1</span>
-  <span class="pl-ent">replicas</span>: <span class="pl-c1">2</span>
+  <span class="pl-ent">replicas</span>: <span class="pl-c1">3</span>
   <span class="pl-ent">selector</span>:
     <span class="pl-ent">matchLabels</span>:
       <span class="pl-ent">app</span>: <span class="pl-s">nginx-demo</span>
@@ -643,7 +645,24 @@ NAMESPACE: default
   <span class="pl-ent">ports</span>:
   - <span class="pl-ent">port</span>: <span class="pl-c1">80</span>
     <span class="pl-ent">targetPort</span>: <span class="pl-c1">80</span>
-    <span class="pl-ent">nodePort</span>: <span class="pl-c1">30080</span></pre></div></div>
+---
+<span class="pl-ent">apiVersion</span>: <span class="pl-s">networking.k8s.io/v1</span>
+<span class="pl-ent">kind</span>: <span class="pl-s">Ingress</span>
+<span class="pl-ent">metadata</span>:
+  <span class="pl-ent">name</span>: <span class="pl-s">test</span>
+<span class="pl-ent">spec</span>:
+  <span class="pl-ent">ingressClassName</span>: <span class="pl-s">ingress-nginx</span>
+  <span class="pl-ent">rules</span>:
+  - <span class="pl-ent">host</span>: <span class="pl-s">test.example.com</span>
+    <span class="pl-ent">http</span>:
+      <span class="pl-ent">paths</span>:
+      - <span class="pl-ent">path</span>: <span class="pl-s">/</span>
+        <span class="pl-ent">pathType</span>: <span class="pl-s">Prefix</span>
+        <span class="pl-ent">backend</span>:
+          <span class="pl-ent">service</span>:
+            <span class="pl-ent">name</span>: <span class="pl-s">nginx-nodeport-svc</span>
+            <span class="pl-ent">port</span>:
+              <span class="pl-ent">number</span>: <span class="pl-c1">80</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
