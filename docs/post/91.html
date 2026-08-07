@@ -224,9 +224,18 @@ NAMESPACE: default
 <p><strong>访问示例</strong>：<code class="notranslate">curl http://&lt;节点IP&gt;:30080/clientip</code></p>
 </li>
 <li>
-<p><strong>返回示例</strong>：<code class="notranslate">10.119.2.34</code></p>
+<p><strong>返回示例</strong>：</p>
 </li>
 </ul>
+<pre class="notranslate"><code class="notranslate">remote_addr:          10.119.8.75
+realip_remote_addr:   10.119.8.75
+proxy_protocol_addr:  
+http_x_real_ip:       10.42.45.26
+http_x_forwarded_for: 10.42.45.26
+remote_port:          54546
+server_addr:          10.119.7.12
+server_port:          80
+</code></pre>
 <h3>3.6 请求头查询 /headers</h3>
 <ul>
 <li>

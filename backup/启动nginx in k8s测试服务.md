@@ -93,7 +93,17 @@ NAMESPACE: default
 
 - **访问示例**：`curl http://<节点IP>:30080/clientip`
 
-- **返回示例**：`10.119.2.34`
+- **返回示例**：
+```
+remote_addr:          10.119.8.75
+realip_remote_addr:   10.119.8.75
+proxy_protocol_addr:  
+http_x_real_ip:       10.42.45.26
+http_x_forwarded_for: 10.42.45.26
+remote_port:          54546
+server_addr:          10.119.7.12
+server_port:          80
+```
 
 ### 3\.6 请求头查询 /headers
 
